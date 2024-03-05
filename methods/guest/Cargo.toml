@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 # If you want to try (experimental) std support, add `features = [ "std" ]` to risc0-zkvm
 risc0-zkvm = { version = "0.20.1", default-features = false, features = [ "std" ] }
-c-kzg = {path = "/home/ubuntu/reference/ethereum/c-kzg-4844/bindings/rust", default-features = false }
+c-kzg = {git = "https://github.com/smtmfft/c-kzg-4844", branch = "risc0/remove-file-io", default-features = false }
 hex = { version = "0.4.3", default-features = false}
 sha2 = {version = "0.10.8", default-features = false }
 # reth-primitives = {git = "https://github.com/paradigmxyz/reth.git", branch = "main", features = ["c-kzg"]}
