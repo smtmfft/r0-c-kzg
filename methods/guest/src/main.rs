@@ -27,7 +27,7 @@ fn main() {
 
     // read the input
     let mut input = [0; 4096*32];
-    env::read_slice(&mut input);
+    // env::read_slice(&mut input);
     let (g1, g2) = parse_kzg_trusted_setup(&KZG_TRUST_SETUP).unwrap();
     // TODO: do something with the input
 

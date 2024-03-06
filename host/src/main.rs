@@ -24,7 +24,7 @@ fn main() {
     // ExecutorEnvBuilder::build().
 
     // For example:
-    let input: u32 = 15 * u32::pow(2, 27) + 1;
+    let input: Vec<u8> = [0; 4096 * 32].into();
     let env = ExecutorEnv::builder()
         .write(&input)
         .unwrap()
