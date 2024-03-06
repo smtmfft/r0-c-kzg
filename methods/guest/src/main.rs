@@ -7,6 +7,7 @@ use risc0_zkvm::guest::env;
 use c_kzg::{KzgCommitment, KzgSettings};
 mod kzg_utils;
 mod kzg_trust_setup;
+mod std_utils;
 use kzg_trust_setup::KZG_TRUST_SETUP;
 use kzg_utils::parse_kzg_trusted_setup;
 use sha2::{Digest, Sha256};
@@ -32,10 +33,10 @@ fn main() {
 
     // uncomment any of following line, you will see the error message
     // undefined symbol: malloc
-    // let kzg_settings = KzgSettings::load_trusted_setup(&g1.0, &g2.0).unwrap();
-    // let kzg_commit = KzgCommitment::blob_to_kzg_commitment(&input.into(), &kzg_settings).unwrap();
-    // let versioned_hash = kzg_to_versioned_hash(&kzg_commit);
+    let kzg_settings = KzgSettings::load_trusted_setup(&g1.0, &g2.0).unwrap();
+    let kzg_commit = KzgCommitment::blob_to_kzg_commitment(&input.into(), &kzg_settings).unwrap();
+    let versioned_hash = kzg_to_versioned_hash(&kzg_commit);
 
     // write public output to the journal
-    // env::commit(&kzg_commit.as_slice());
+    env::commit(&versioned_hash);
 }
