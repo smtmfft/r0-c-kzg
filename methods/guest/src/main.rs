@@ -28,9 +28,8 @@ fn main() {
     // read the input
     let mut input = [0; 4096*32];
     env::read_slice(&mut input);
-    // let (g1, g2) = parse_kzg_trusted_setup(&KZG_TRUST_SETUP).unwrap();
-    // TODO: do something with the input
-    env::log(format!("input: {:?}", input).as_str());
+    // sample input for testing
+    env::log(format!("input: {:?}", hex::encode(Sha256::digest(&input.as_slice()))).as_str());
 
     // uncomment any of following line, you will see the error message
     let mut data = KZG_TRUST_SETUP_DATA.to_owned().clone();
@@ -38,6 +37,7 @@ fn main() {
 
     let kzg_commit = KzgCommitment::blob_to_kzg_commitment(&input.into(), &kzg_settings).unwrap();
     let versioned_hash = kzg_to_versioned_hash(&kzg_commit);
+    env::log(format!("in VM versioned_hash: {:?}", hex::encode(versioned_hash)).as_str());
 
     // write public output to the journal
     env::commit(&versioned_hash);

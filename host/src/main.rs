@@ -85,7 +85,9 @@ fn main() {
     // TODO: Implement code for retrieving receipt journal here.
 
     // For example:
-    let _output: u32 = receipt.journal.decode().unwrap();
+    let output:[u8; 32] = receipt.journal.decode().unwrap();
+
+    println!("jorunal = {:?}", hex::encode(output));
 
     // The receipt was verified at the end of proving, but the below code is an
     // example of how someone else could verify this receipt.
