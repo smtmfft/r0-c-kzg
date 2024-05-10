@@ -1,18 +1,18 @@
 #![no_main]
 // If you want to try std support, also update the guest Cargo.toml file
-#![no_std]  // std support is experimental
+// #![no_std]  // std support is experimental
 
 use risc0_zkvm::guest::env;
 
-use c_kzg::{KzgCommitment, KzgSettings};
+use c_kzg_taiko::{KzgCommitment, KzgSettings};
 mod kzg_utils;
 mod kzg_trust_setup;
 mod std_utils;
-use kzg_trust_setup::KZG_TRUST_SETUP;
-use kzg_utils::parse_kzg_trusted_setup;
 use sha2::{Digest, Sha256};
 
 risc0_zkvm::guest::entry!(main);
+
+const KZG_TRUST_SETUP_DATA: &[u8] = include_bytes!("../../../kzg_settings_raw.bin");
 
 pub const VERSIONED_HASH_VERSION_KZG: u8 = 0x01;
 
@@ -27,13 +27,15 @@ fn main() {
 
     // read the input
     let mut input = [0; 4096*32];
-    // env::read_slice(&mut input);
-    let (g1, g2) = parse_kzg_trusted_setup(&KZG_TRUST_SETUP).unwrap();
+    env::read_slice(&mut input);
+    // let (g1, g2) = parse_kzg_trusted_setup(&KZG_TRUST_SETUP).unwrap();
     // TODO: do something with the input
+    env::log(format!("input: {:?}", input).as_str());
 
     // uncomment any of following line, you will see the error message
-    // undefined symbol: malloc
-    let kzg_settings = KzgSettings::load_trusted_setup(&g1.0, &g2.0).unwrap();
+    let mut data = KZG_TRUST_SETUP_DATA.to_owned().clone();
+    let kzg_settings = KzgSettings::from_u8_slice(&mut data);
+
     let kzg_commit = KzgCommitment::blob_to_kzg_commitment(&input.into(), &kzg_settings).unwrap();
     let versioned_hash = kzg_to_versioned_hash(&kzg_commit);
 
